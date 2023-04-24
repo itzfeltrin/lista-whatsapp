@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "Game" ADD COLUMN     "over" BOOLEAN NOT NULL DEFAULT false;
+
+-- AlterTable
+ALTER TABLE "Team" ALTER COLUMN "played" SET DEFAULT 0,
+ALTER COLUMN "wins" SET DEFAULT 0;
