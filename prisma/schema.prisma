@@ -3,12 +3,41 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Contact {
-  id    Int    @id @default(autoincrement())
-  name  String
-  phone String @unique
+  id        Int                  @id @default(autoincrement())
+  name      String
+  nickname  String?
+  phone     String               @unique
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+  messages  ContactsOnMessages[]
+
+  @@map("contact")
+}
+
+model Message {
+  id        Int                  @id @default(autoincrement())
+  text      String
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+  contacts  ContactsOnMessages[]
+
+  @@map("message")
+}
+
+model ContactsOnMessages {
+  contact   Contact  @relation(fields: [contactId], references: [id])
+  contactId Int
+  message   Message  @relation(fields: [messageId], references: [id])
+  messageId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([contactId, messageId])
+  @@map("contact_message")
 }
